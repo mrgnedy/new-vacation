@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1078163161004",
+    "firebase_url": "https://vacation-61e94.firebaseio.com",
+    "project_id": "vacation-61e94",
+    "storage_bucket": "vacation-61e94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078163161004:android:2e02fbcb5a485cb8db4409",
+        "android_client_info": {
+          "package_name": "kws.com.vacatiion.vacatiion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078163161004-b10t4nbdg1sb8m0jmhhu974rulj4kiru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT-5Ukp9YqN-AcaPmR7Oy1y1b4c5A5S3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078163161004-b10t4nbdg1sb8m0jmhhu974rulj4kiru.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1078163161004-so1enl0bj4tam5fla2jed28e042a7ik0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kws.com.vacation.vacation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
