@@ -514,7 +514,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                             child: Stack(
                               children: <Widget>[
                                 //------------------------- Image Chalet- -----------------------//
-                                imagePrevio == null
+                                images.isEmpty
                                     ? Container(
                                         // padding: EdgeInsets.symmetric(horizontal: 5),
                                         width: double.infinity,
@@ -525,9 +525,10 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                         // padding: EdgeInsets.symmetric(horizontal: 5),
                                         width: double.infinity,
                                         height: 150,
-                                        child: Image.asset(
-                                          imagePrevio,
-                                          fit: BoxFit.cover,
+                                        child: AssetThumb(
+                                        asset: images[0],
+                                        width: double.infinity.round(),
+                                        height: 150,
                                         ),
                                       ),
 
@@ -3196,10 +3197,10 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
         ),
       );
 
-      for (var r in resultList) {
-        var t = await r.filePath;
-        print(t);
-      }
+      // for (var r in resultList) {
+      //   var t = await r.filePath;
+      //   print(t);
+      // }
     } on Exception catch (e) {
       error = e.toString();
     }
@@ -3214,9 +3215,9 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       _error = error;
       print("----------------${images.length}-------------------");
       if (images.length < 6) {
-        images[0]..then((onValue) {
-          imagePrevio = onValue.. toString();
-        });
+        // images[0]..then((onValue) {
+        //   imagePrevio = onValue.. toString();
+        // });
 
         Utility.showToast("من فضلك اختر 6 صور للشاليه",
             context: context,
@@ -3452,12 +3453,15 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
     //-----------------------Images---------------------//
     if (images.length >= 6) {
-      for (var s in images) {
-        var pathImage = await s.filePath;
+    final List imgsData = (await getImageListFromAssets(images));
+    final List<List<int>> imgs = imgsData.first;
+    final List<String> imgsNames = imgsData.last;
+      for (int i=0; i<imgs.length; i++) {
+        // var pathImage = await s.filePath;
 
-        var filename = await s.name;
+        // var filename = await s.name;
 
-        var gg = await MultipartFile.from((pathImage));
+        var gg =  MultipartFile.fromBytes(imgs[i], filename: imgsNames[i]);
 
         detailsOfChalets["images"].add({"image": gg});
       }
