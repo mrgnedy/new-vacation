@@ -16,6 +16,7 @@ import 'package:vacatiion/model/Advertiser/UpdateAdvertiser.dart';
 import 'package:vacatiion/model/AdvertiserChalets/AdvertiserChaletsShow.dart';
 import 'package:vacatiion/model/AllChaletsAndOffersModel.dart';
 import 'package:vacatiion/model/BannerModel.dart';
+import 'package:vacatiion/model/cities_model.dart';
 import 'package:vacatiion/pages/SubPages/OffersPage.dart';
 import 'package:vacatiion/utility/api_utilites.dart';
 import 'package:vacatiion/utility/utility_class.dart';
@@ -27,137 +28,141 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 
-
-class ScopedModelMainPageUser extends Model
-{
-  static bool loadingHomePage;
-  static bool showhintAddCategory=true;
-  static bool checkExistChalet=false;
-  static int numbersOfChalets=3;
-  static  bool checkExistOffers=false;
-  ///-------------------------------------------------------- StreamController Chalet -------------------------------------------//
-  StreamController<AllChaletsAndOffersModel>  streamControllerUserChalets;
-  //----------Start stream-----------//
-  initialStreamControllerChalet()
-  {
-    streamControllerUserChalets=StreamController<AllChaletsAndOffersModel>.broadcast();
+class ScopedModelMainPageUser extends Model {
+  String token;
+  CititesModel cititesModel;
+  ScopedModelMainPageUser() {
+    SharedPreferences.getInstance().then((pref) {
+      token = pref.getString('token');
+    getAllCities();
+    });
   }
+  static bool loadingHomePage;
+  static bool showhintAddCategory = true;
+  static bool checkExistChalet = false;
+  static int numbersOfChalets = 3;
+  static bool checkExistOffers = false;
+
+  ///-------------------------------------------------------- StreamController Chalet -------------------------------------------//
+  StreamController<AllChaletsAndOffersModel> streamControllerUserChalets;
+  //----------Start stream-----------//
+  initialStreamControllerChalet() {
+    streamControllerUserChalets =
+        StreamController<AllChaletsAndOffersModel>.broadcast();
+  }
+
   //---------------------- Input and Output Stream Get All Chalet ----------------------//
-  Stream <AllChaletsAndOffersModel>  get outAllChaletUser => streamControllerUserChalets.stream;
-  Sink<AllChaletsAndOffersModel>  get inPutAllChaletUser => streamControllerUserChalets.sink;
+  Stream<AllChaletsAndOffersModel> get outAllChaletUser =>
+      streamControllerUserChalets.stream;
+  Sink<AllChaletsAndOffersModel> get inPutAllChaletUser =>
+      streamControllerUserChalets.sink;
   //----------Stop stream----------//
-  void disposeStreamControllerChalet()
-  {
+  void disposeStreamControllerChalet() {
     streamControllerUserChalets.close();
   }
 
   ///===================================================== StreamController Offers ============================================//
-  StreamController<AllChaletsAndOffersModel>    streamControllerUserOffers;
+  StreamController<AllChaletsAndOffersModel> streamControllerUserOffers;
   //---------------------- Input and Output Stream Get All Chalet ----------------------//
-  Stream<AllChaletsAndOffersModel> get outAllOffersUser =>streamControllerUserOffers.stream;
-  Sink<AllChaletsAndOffersModel> get inPutAllOffersUser => streamControllerUserOffers.sink;
+  Stream<AllChaletsAndOffersModel> get outAllOffersUser =>
+      streamControllerUserOffers.stream;
+  Sink<AllChaletsAndOffersModel> get inPutAllOffersUser =>
+      streamControllerUserOffers.sink;
   //----------Start stream-----------//
-  initialStreamControllerOffers()
-  {
-    streamControllerUserOffers=StreamController<AllChaletsAndOffersModel>.broadcast();
+  initialStreamControllerOffers() {
+    streamControllerUserOffers =
+        StreamController<AllChaletsAndOffersModel>.broadcast();
   }
+
   //----------Stop stream----------//
-  void disposeStreamControllerOffers()
-  {
+  void disposeStreamControllerOffers() {
     streamControllerUserOffers.close();
   }
 
-
   //-----------Get All Data by Token---------------//
-  String _apiGetAllChaletsUser=ApiUtilities.baseApi+ApiUtilities.userChalets;
-  String _apiGetAllOffersUser=ApiUtilities.baseApi+ApiUtilities.userOffers;
-  String _apiAddFavorites=ApiUtilities.baseApi+ApiUtilities.addFavorites;
-  String _apiGitTOPFIVE=ApiUtilities.baseApi+ApiUtilities.topFiveApi;
-
-
+  String _apiGetAllChaletsUser =
+      ApiUtilities.baseApi + ApiUtilities.userChalets;
+  String _apiGetAllOffersUser = ApiUtilities.baseApi + ApiUtilities.userOffers;
+  String _apiAddFavorites = ApiUtilities.baseApi + ApiUtilities.addFavorites;
+  String _apiGitTOPFIVE = ApiUtilities.baseApi + ApiUtilities.topFiveApi;
 
   //-------------- Loading Home PAGE ----------------//
-  showLoadingHomePage()
-  {
-    loadingHomePage=true;
+  showLoadingHomePage() {
+    loadingHomePage = true;
     notifyListeners();
   }
-  stopLoadingHomePage()
-  {
-    loadingHomePage=false;
+
+  stopLoadingHomePage() {
+    loadingHomePage = false;
     notifyListeners();
   }
+
   //---------------change Number Items-------------//
-  changeNumberItems(int i)
-  {
-    numbersOfChalets=i;
+  changeNumberItems(int i) {
+    numbersOfChalets = i;
     notifyListeners();
   }
+
   //------------------Check Chalet available-------------//
-  checkExistChaletV()
-  {
-    checkExistChalet=true;
+  checkExistChaletV() {
+    checkExistChalet = true;
     notifyListeners();
   }
-  checkNotExistChaletV()
-  {
-    checkExistChalet=false;
+
+  checkNotExistChaletV() {
+    checkExistChalet = false;
     notifyListeners();
   }
+
   //--------------------Check Offers available------------------------//
-  methdcheckExistOffers()
-  {
-    checkExistOffers=true;
-  }
-  methdcheckNotExistOffers()
-  {
-    checkExistOffers=false;
+  methdcheckExistOffers() {
+    checkExistOffers = true;
   }
 
-
+  methdcheckNotExistOffers() {
+    checkExistOffers = false;
+  }
 
   Future getAllChaletUser({BuildContext context}) async {
     showLoadingHomePage();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
-    final response =
-    await http.get(_apiGetAllChaletsUser+token, headers: {"Accept": "application/json"});
+    final response = await http.get(_apiGetAllChaletsUser + token,
+        headers: {"Accept": "application/json"});
 
-    var   data  =json.decode(response.body);
+    var data = json.decode(response.body);
 
     ///========================================= Check the Status Response (SUCCESS)====================================//
-    if(data['status']==Utility.VERIFICATION_CODE_SUCCESS)
-    {
+    if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
       checkExistChaletV();
       changeNumberItems(AllChaletsAndOffersModel.fromJson(data).data.length);
-      inPutAllChaletUser.add( AllChaletsAndOffersModel.fromJson(data));
-      print("-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
+      inPutAllChaletUser.add(AllChaletsAndOffersModel.fromJson(data));
+      print(
+          "-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
       stopLoadingHomePage();
     }
+
     ///========================================= Check the Status Response (FAILED)====================================//
-    else if(data['status']==Utility.VERIFICATION_CODE_FAILED)
-    {
+    else if (data['status'] == Utility.VERIFICATION_CODE_FAILED) {
       checkNotExistChaletV();
-      var error =AdvertiserNoChalets.fromJson(data);
-      print("============================ Get All ChALET ${error.error[0]} =================");
+      var error = AdvertiserNoChalets.fromJson(data);
+      print(
+          "============================ Get All ChALET ${error.error[0]} =================");
       stopLoadingHomePage();
       //------------Shaw Dialog ---------------//
       //shawAlertDialog(context: context,msg:error.error[0]);
-    }else
-    {
+    } else {
       stopLoadingHomePage();
-      print("=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
-      if(data["message"]=="Unauthenticated.")
-      {
-        shawAlertDialogLogin(context: context,msg: "برجاء تسجيل الدخول",title:data["message"]);
+      print(
+          "=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
+      if (data["message"] == "Unauthenticated.") {
+        shawAlertDialogLogin(
+            context: context,
+            msg: "برجاء تسجيل الدخول",
+            title: data["message"]);
       }
-
     }
-
-
-
-
   }
 
   Future getAllOffersUser({BuildContext context}) async {
@@ -165,43 +170,41 @@ class ScopedModelMainPageUser extends Model
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
-    final response =
-    await http.get(_apiGetAllOffersUser+token, headers: {"Accept": "application/json"});
+    final response = await http.get(_apiGetAllOffersUser + token,
+        headers: {"Accept": "application/json"});
 
-    var   data  =json.decode(response.body);
+    var data = json.decode(response.body);
 
     ///========================================= Check the Status Response (SUCCESS)====================================//
-    if(data['status']==Utility.VERIFICATION_CODE_SUCCESS)
-    {
+    if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
       methdcheckExistOffers();
       changeNumberItems(AllChaletsAndOffersModel.fromJson(data).data.length);
-      inPutAllOffersUser.add( AllChaletsAndOffersModel.fromJson(data));
-      print("-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
+      inPutAllOffersUser.add(AllChaletsAndOffersModel.fromJson(data));
+      print(
+          "-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
       stopLoadingHomePage();
     }
+
     ///========================================= Check the Status Response (FAILED)====================================//
-    else if(data['status']==Utility.VERIFICATION_CODE_FAILED)
-    {
+    else if (data['status'] == Utility.VERIFICATION_CODE_FAILED) {
       methdcheckNotExistOffers();
-      var error =AdvertiserNoChalets.fromJson(data);
-      print("============================ Get All ChALET ${error.error[0]} =================");
+      var error = AdvertiserNoChalets.fromJson(data);
+      print(
+          "============================ Get All ChALET ${error.error[0]} =================");
       stopLoadingHomePage();
       //------------Shaw Dialog ---------------//
       //shawAlertDialog(context: context,msg:error.error[0]);
-    }else
-    {
+    } else {
       stopLoadingHomePage();
-      print("=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
-      if(data["message"]=="Unauthenticated.")
-      {
-        shawAlertDialogLogin(context: context,msg: "برجاء تسجيل الدخول",title:data["message"]);
+      print(
+          "=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
+      if (data["message"] == "Unauthenticated.") {
+        shawAlertDialogLogin(
+            context: context,
+            msg: "برجاء تسجيل الدخول",
+            title: data["message"]);
       }
-
     }
-
-
-
-
   }
 
   Future getAllTopFive({BuildContext context}) async {
@@ -209,86 +212,94 @@ class ScopedModelMainPageUser extends Model
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
-    final response =
-    await http.get(_apiGitTOPFIVE+token, headers: {"Accept": "application/json"});
+    final response = await http
+        .get(_apiGitTOPFIVE + token, headers: {"Accept": "application/json"});
 
-    var   data  =json.decode(response.body);
+    var data = json.decode(response.body);
 
     ///========================================= Check the Status Response (SUCCESS)====================================//
-    if(data['status']==Utility.VERIFICATION_CODE_SUCCESS)
-    {
+    if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
       methdcheckExistOffers();
       changeNumberItems(AllChaletsAndOffersModel.fromJson(data).data.length);
-      inPutAllOffersUser.add( AllChaletsAndOffersModel.fromJson(data));
-      print("-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
+      inPutAllOffersUser.add(AllChaletsAndOffersModel.fromJson(data));
+      print(
+          "-------------------------Test----------------${AllChaletsAndOffersModel.fromJson(data).data.length}");
       stopLoadingHomePage();
     }
+
     ///========================================= Check the Status Response (FAILED)====================================//
-    else if(data['status']==Utility.VERIFICATION_CODE_FAILED)
-    {
+    else if (data['status'] == Utility.VERIFICATION_CODE_FAILED) {
       methdcheckNotExistOffers();
-      var error =AdvertiserNoChalets.fromJson(data);
-      print("============================ Get All ChALET ${error.error[0]} =================");
+      var error = AdvertiserNoChalets.fromJson(data);
+      print(
+          "============================ Get All ChALET ${error.error[0]} =================");
       stopLoadingHomePage();
       //------------Shaw Dialog ---------------//
       //shawAlertDialog(context: context,msg:error.error[0]);
-    }else
-    {
+    } else {
       stopLoadingHomePage();
-      print("=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
-      if(data["message"]=="Unauthenticated.")
-      {
-        shawAlertDialogLogin(context: context,msg: "برجاء تسجيل الدخول",title:data["message"]);
+      print(
+          "=========================== VERIFICATION_CODE Not compatible with schema${data["message"]} =======================");
+      if (data["message"] == "Unauthenticated.") {
+        shawAlertDialogLogin(
+            context: context,
+            msg: "برجاء تسجيل الدخول",
+            title: data["message"]);
       }
-
     }
-
-
-
-
   }
 
-  Future addFavorites ({String chaletId,BuildContext context})async
-  {
+  Future addFavorites({String chaletId, BuildContext context}) async {
     print("-----------------------${chaletId}--------------");
     showLoadingHomePage();
-    print("------------------------------------TTTTTTTTTTTTTTTTTTTT----------------------");
+    print(
+        "------------------------------------TTTTTTTTTTTTTTTTTTTT----------------------");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
     //------------------- Send Request in Server ---------------------//
-    var response = await http.post(_apiAddFavorites+token, body: {'chalet_id': "${chaletId.trim()}",});
+    var response = await http.post(_apiAddFavorites + token, body: {
+      'chalet_id': "${chaletId.trim()}",
+    });
 
     //------------------- Receive Response in Server ---------------------//
-    var data=json.decode(response.body);
-
+    var data = json.decode(response.body);
 
     ///========================================= Check the Status Response (SUCCESS)====================================//
-    if(data['status']==Utility.VERIFICATION_CODE_SUCCESS)
-    {
-
-
-      Utility.showToast("تم الاضافه الى المفضله",context: context,duration:Toast.LENGTH_LONG,chooseColor: 2,gravity:Toast.BOTTOM);
+    if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
+      Utility.showToast("تم الاضافه الى المفضله",
+          context: context,
+          duration: Toast.LENGTH_LONG,
+          chooseColor: 2,
+          gravity: Toast.BOTTOM);
       stopLoadingHomePage();
     }
+
     ///========================================= Check the Status Response (FAILED)====================================//
-    else if(data['status']==Utility.VERIFICATION_CODE_FAILED)
-    {
-      Utility.showToast("تم الاضافه من قبل",context: context,duration:Toast.LENGTH_LONG,chooseColor: 1,gravity:Toast.BOTTOM);
+    else if (data['status'] == Utility.VERIFICATION_CODE_FAILED) {
+      Utility.showToast("تم الاضافه من قبل",
+          context: context,
+          duration: Toast.LENGTH_LONG,
+          chooseColor: 1,
+          gravity: Toast.BOTTOM);
       print("--------------${data.toString()}");
       stopLoadingHomePage();
-
     }
-
-
 
     return addFavorites;
   }
 
+  Future<CititesModel> getAllCities() async {
+    String url = "${ApiUtilities.baseApi}${ApiUtilities.listCities}$token";
+    final response = await http.get(url);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final derivedData = json.decode(response.body);
+      cititesModel = CititesModel.fromJson(derivedData);
+    }
+    notifyListeners();
+    return cititesModel;
+  }
 
-
-
-  void shawAlertDialogLogin({BuildContext context,String msg,String title})
-  {
+  void shawAlertDialogLogin({BuildContext context, String msg, String title}) {
     Alert(
       context: context,
       type: AlertType.warning,
@@ -296,14 +307,12 @@ class ScopedModelMainPageUser extends Model
       desc: msg,
       style: Utility.alertStyle,
       buttons: [
-
         DialogButton(
           child: Text(
             "تسجيل الدخول ",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: ()
-          {
+          onPressed: () {
             //------------ Dismiss Dialog ------------//
             Navigator.pop(context);
             //------------- open First PAGE -------------//

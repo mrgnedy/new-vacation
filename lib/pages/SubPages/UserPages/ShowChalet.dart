@@ -257,7 +257,6 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: Row(
-
                                             // fit: StackFit.expand,
                                             children: <Widget>[
                                               //---------LEFT Row----//
@@ -268,7 +267,6 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                                   alignment:
                                                       Alignment.centerRight,
                                                   child: Container(
-                                                    
                                                     child: Column(
                                                       children: <Widget>[
                                                         //--------------Saturday----------//
@@ -692,17 +690,17 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                                     children: <Widget>[
                                                       InkWell(
                                                         onTap: () {
-                                                          getNameLocationForUser(
-                                                              lat1: snapshot
-                                                                  .data
-                                                                  .data
-                                                                  .chalet
-                                                                  .lat,
-                                                              long1: snapshot
-                                                                  .data
-                                                                  .data
-                                                                  .chalet
-                                                                  .lng);
+                                                          // getNameLocationForUser(
+                                                          //     lat1: snapshot
+                                                          //         .data
+                                                          //         .data
+                                                          //         .chalet
+                                                          //         .lat,
+                                                          //     long1: snapshot
+                                                          //         .data
+                                                          //         .data
+                                                          //         .chalet
+                                                          //         .lng);
 
                                                           print(
                                                               "======================== Click =======+==============");
@@ -788,6 +786,42 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                           //------------------Key-----------------//
                                           Text(
                                             ": نوع العقار",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'DinNextRegular',
+                                              color: Color(0xff2E0063),
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: 5, right: 16),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: <Widget>[
+                                          //-------------------Value----------------//
+                                          Text(
+                                            "${snapshot.data.data.chalet.numberGuests}",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'DinNextRegular',
+                                              color: Color(0xff2E0063),
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          //------------------Key-----------------//
+                                          Text(
+                                            ": عدد الضيوف",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: 'DinNextRegular',
@@ -1345,36 +1379,50 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                             Column(
                                               children: <Widget>[
                                                 InkWell(
-                                                  onTap: () {
-                                                    DatePicker.showDatePicker(
-
-                                                        context,
-                                                      
-                                                        showTitleActions: true,
-                                                        minTime: DateTime(
-                                                            2000, 1, 1),
-                                                        maxTime: DateTime(
-                                                            3000, 1, 1),
-                                                        onChanged: (date) {
-                                                      //2019-10-25
-                                                    }, onConfirm: (date) async {
-                                                      lastDate = date;
-                                                      setState(() {
-                                                        endDate = date
-                                                            .toString()
-                                                            .split(' ')[0];
-                                                      });
-                                                      // await calculatePrice(
-                                                      //     priceX: snapshot
-                                                      //         .data
-                                                      //         .data
-                                                      //         .chalet
-                                                      //         .days);
-                                                      //  print('====================confirm $date');
-                                                    },
-                                                        currentTime:
-                                                            DateTime.now(),
-                                                        locale: LocaleType.ar);
+                                                  onTap: () async {
+                                                    final date =
+                                                        await showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate: DateTime
+                                                                    .now()
+                                                                .subtract(
+                                                                    Duration(
+                                                                        days:
+                                                                            365)),
+                                                            lastDate: DateTime
+                                                                    .now()
+                                                                .add(Duration(
+                                                                    days:
+                                                                        365)));
+                                                    // DatePicker.showDatePicker(
+                                                    //     context,
+                                                    //     showTitleActions: true,
+                                                    //     minTime: DateTime(
+                                                    //         2000, 1, 1),
+                                                    //     maxTime: DateTime(
+                                                    //         3000, 1, 1),
+                                                    //     onChanged: (date) {
+                                                    //   //2019-10-25
+                                                    // }, onConfirm: (date) async {
+                                                    lastDate = date;
+                                                    setState(() {
+                                                      endDate = date
+                                                          .toString()
+                                                          .split(' ')[0];
+                                                    });
+                                                    // await calculatePrice(
+                                                    //     priceX: snapshot
+                                                    //         .data
+                                                    //         .data
+                                                    //         .chalet
+                                                    //         .days);
+                                                    //  print('====================confirm $date');
+                                                    // },
+                                                    // currentTime:
+                                                    //     DateTime.now(),
+                                                    // locale: LocaleType.ar);
                                                   },
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -1441,28 +1489,45 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                             Column(
                                               children: <Widget>[
                                                 InkWell(
-                                                  onTap: () {
-                                                    DatePicker.showDatePicker(
-                                                        context,
-                                                        showTitleActions: true,
-                                                        minTime: DateTime(
-                                                            2000, 1, 1),
-                                                        maxTime: DateTime(
-                                                            3000, 1, 1),
-                                                        onChanged: (date) {
-                                                      //2019-10-25
-                                                    }, onConfirm: (date) {
-                                                      firstDate = date;
-                                                      setState(() {
-                                                        StartDate = date
-                                                            .toString()
-                                                            .split(' ')[0];
-                                                      });
+                                                  onTap: () async {
+                                                    final date =
+                                                        await showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate: DateTime
+                                                                    .now()
+                                                                .subtract(
+                                                                    Duration(
+                                                                        days:
+                                                                            365)),
+                                                            lastDate: DateTime
+                                                                    .now()
+                                                                .add(Duration(
+                                                                    days:
+                                                                        365)));
+                                                    // DatePicker.showDatePicker(
+                                                    //     context,
+                                                    //     showTitleActions: true,
+                                                    //     minTime: DateTime(
+                                                    //         2000, 1, 1),
+                                                    //     maxTime: DateTime(
+                                                    //         3000, 1, 1),
+                                                    //     onChanged: (date) {
+                                                    //   //2019-10-25
+                                                    // }, onConfirm: (date) {
+                                                    firstDate = date;
+                                                    setState(() {
+                                                      StartDate = date
+                                                          .toString()
+                                                          .split(' ')[0];
+                                                      // });
                                                       //  print('====================confirm $date');
-                                                    },
-                                                        currentTime:
-                                                            DateTime.now(),
-                                                        locale: LocaleType.ar);
+                                                      // },
+                                                      // currentTime:
+                                                      //     DateTime.now(),
+                                                      // locale: LocaleType.ar);
+                                                    });
                                                   },
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -1812,7 +1877,7 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                   Visibility(
                                     visible: role_id != 3,
                                     child: InkWell(
-                                      onTap: () {
+                                      onTap: () async {
                                         if (widget.isSkip)
                                           Utility.shawAlertDialogFailedLoginPage(
                                               context: context,
@@ -1829,7 +1894,29 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                           model.setPrice = calculatePrice();
                                           print(StartDate);
                                           print(endDate);
+
+                                          final deposit =
+                                              snapshot.data.data.chalet.deposit;
+                                          final discount = snapshot
+                                              .data.data.chalet.discount;
+                                          final policy = cancellationPolicyText;
+                                          final image = snapshot.data.data
+                                              .chalet.images.first.image;
+                                          final lat =
+                                              snapshot.data.data.chalet.lat;
+                                          final lng =
+                                              (snapshot.data.data.chalet.lng);
+                                          final address = (await Geocoder.local
+                                                  .findAddressesFromCoordinates(
+                                                      Coordinates(lat, lng)))
+                                              .first
+                                              .addressLine;
                                           model.getCheckChalet(
+                                              deposit: deposit,
+                                              discount: discount,
+                                              policy: policy,
+                                              image: image,
+                                              address: address,
                                               context: context,
                                               chaletId: snapshot
                                                   .data.data.chalet.id
@@ -1843,7 +1930,7 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                                             horizontal: 0),
                                         child: Container(
                                           height: 60,
-                                          width: double.infinity,
+                                          width: 1000,
                                           decoration: new BoxDecoration(
                                             image: new DecorationImage(
                                               image: new AssetImage(
@@ -1873,7 +1960,7 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                             ///------------------------------------------------------------ AppBar ----------------------------------------------------//
                             Container(
                               height: 100,
-                              width: double.infinity,
+                              width: 1000,
                               decoration: new BoxDecoration(
                                 image: new DecorationImage(
                                   image: new AssetImage(
@@ -2023,7 +2110,8 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
     print(price);
     if (additions != null)
       additions.forEach((add) {
-        price += add['price'];
+        print(additions);
+        price += num.parse(add['add']['price'].toString());
       });
 
     return price;
@@ -2113,13 +2201,18 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () {
-                    DatePicker.showDatePicker(context,
-                        minTime: DateTime(2000, 1, 1),
-                        maxTime: DateTime(3000, 1, 1),
-                        locale: LocaleType.ar, onConfirm: (date) {
-                      offerStartDateCtrlr.text = date.toString().split(' ')[0];
-                    });
+                  onPressed: () async {
+                    final temp = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now().subtract(Duration(days: 365)),
+                        lastDate: DateTime.now().add(Duration(days: 365)));
+                    // showDatePicker(context,
+                    //       minTime: DateTime(2000, 1, 1),
+                    //       maxTime: DateTime(3000, 1, 1),
+                    //       locale: LocaleType.ar, onConfirm: (date) {
+                    offerStartDateCtrlr.text = temp.toString().split(' ')[0];
+                    // });
                   },
                 )
               ],
@@ -2135,13 +2228,18 @@ class _ShowChaletUserState extends State<ShowChaletUser> {
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () {
-                    DatePicker.showDatePicker(context,
-                        minTime: DateTime(2000, 1, 1),
-                        maxTime: DateTime(3000, 1, 1),
-                        locale: LocaleType.ar, onConfirm: (date) {
-                      offerEndDateCtrlr.text = date.toString().split(' ')[0];
-                    });
+                  onPressed: () async {
+                    final date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now().subtract(Duration(days: 365)),
+                        lastDate: DateTime.now().add(Duration(days: 365)));
+                    // DatePicker.showDatePicker(context,
+                    //     minTime: DateTime(2000, 1, 1),
+                    //     maxTime: DateTime(3000, 1, 1),
+                    //     locale: LocaleType.ar, onConfirm: (date) {
+                    offerEndDateCtrlr.text = date.toString().split(' ')[0];
+                    // });
                   },
                 )
               ],
@@ -2453,7 +2551,7 @@ class _CarouselDemoViewState extends State<CarouselDemoView> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
-                        width: double.infinity,
+                        width: 1000,
                         height: 150,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -2487,7 +2585,7 @@ class _CarouselDemoViewState extends State<CarouselDemoView> {
                       Container(
                         alignment: Alignment.bottomLeft,
                         height: 40,
-                        width: double.infinity,
+                        width: 1000,
                         padding: EdgeInsets.all(0.0),
                         //------Background Color Gradient in Text------//
                         decoration: BoxDecoration(
@@ -2540,6 +2638,7 @@ class _CarouselDemoViewState extends State<CarouselDemoView> {
 
   @override
   Widget build(BuildContext context) {
+    
     //Manually operated Carousel
     final CarouselSlider manualCarouselDemo = CarouselSlider(
       items: child,
@@ -2714,3 +2813,4 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
     );
   }
 }
+// extension Z on MultiImagePicker()

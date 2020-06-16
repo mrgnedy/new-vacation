@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:toast/toast.dart';
-import 'package:vacatiion/.New%20folder/utility/utility_class.dart';
+import 'package:vacatiion/utility/utility_class.dart';
 import 'package:vacatiion/ScopedModels/ScopedModelMainPageAdvertiser.dart';
 import 'package:vacatiion/ScopedModels/ScopedModelMainPageUser.dart';
 import 'package:vacatiion/model/AdvertiserChalets/AdvertiserChaletsShow.dart';

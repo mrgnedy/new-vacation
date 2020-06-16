@@ -149,7 +149,7 @@ class ScopedModeResultSearchPage extends Model
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString(Utility.TOKEN);
 
-      var response = await http.post(_apiGetSearchByCity+token, body:{"city":"$cityName"},headers: {"Accept": "application/json"});
+      var response = await http.post(_apiGetSearchByCity+token, body:{"city_id":"$cityName"},headers: {"Accept": "application/json"});
 
 
 

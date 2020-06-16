@@ -94,11 +94,11 @@ class ReservationConfirmationPageState
                           showBackView: isCvvFocused,
                         ),
                         Text(
-                          'قيمة العربون المطلوب دفعه حاليا: ${widget.price} ر.س',
+                          'قيمة العربون: ${widget.price} ر.س',
                           style: TextStyle(
                               color: ColorsV.defaultColor,
                               fontSize: 24,
-                              fontFamily: 'DinNextLight'),
+                              fontFamily: 'DinNextMedium'),
                         ),
                         Expanded(
                           child: SingleChildScrollView(
@@ -114,7 +114,7 @@ class ReservationConfirmationPageState
                               model.confirmPayment(
                                 context,
                                 brand: 'VISA',
-                                amount: 0.0.toString(),
+                                amount: widget.price.toString(),
                                 currency: 'SAR',
                                 cvv: cvvCode,
                                 reservationId: widget.chaletId,

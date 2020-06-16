@@ -98,7 +98,7 @@ class _PersonalAccountUserState extends State<PersonalAccountUser> {
                                                 decoration: myBoxDecoration(),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Text("${snapshot.data.data.name}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
+                                                  child: Text("${snapshot.data.data.profile.name}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
                                                 ),
                                               ),
 
@@ -114,7 +114,7 @@ class _PersonalAccountUserState extends State<PersonalAccountUser> {
                                                 decoration: myBoxDecoration(),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Text("${snapshot.data.data.email}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
+                                                  child: Text("${snapshot.data.data.profile.email}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
                                                 ),
                                               ),
 
@@ -131,7 +131,7 @@ class _PersonalAccountUserState extends State<PersonalAccountUser> {
                                                 decoration: myBoxDecoration(),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Text("${snapshot.data.data.phone}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
+                                                  child: Text("${snapshot.data.data.profile.phone}",style: TextStyle(fontSize: 18,color: ColorsV.defaultColor),),
                                                 ),
                                               ),
                                               //phone

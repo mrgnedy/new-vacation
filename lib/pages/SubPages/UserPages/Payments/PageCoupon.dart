@@ -1,37 +1,22 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:expandable/expandable.dart';
+
+import 'package:vacatiion/utility/colors.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:vacatiion/ScopedModels/ScopedModelShowChalet.dart';
-import 'package:vacatiion/model/AdvertiserChalets/AdvertiserChaletsShow.dart';
-import 'package:vacatiion/model/AdvertiserChalets/AdvertiserChaletsShow.dart'
-    as prefix0;
-import 'package:vacatiion/model/ShowChaletModel.dart';
-import 'package:vacatiion/model/ShowChaletModel.dart' as prefix1;
-import 'package:vacatiion/model/SuccessReservationModel.dart';
-import 'package:vacatiion/pages/SubPages/UserPages/Payments/Payment_info.dart';
-import 'package:vacatiion/pages/mainPages/AdvertiserPages/post_row/OpenPostDescription.dart';
-import 'package:vacatiion/pages/mainPages/AdvertiserPages/post_row/OpenPostDescription.dart'
-    as prefix2;
-import 'package:vacatiion/utility/colors.dart';
-import 'package:vacatiion/utility/page-route-transition.dart';
 import 'package:vacatiion/utility/utility_class.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:vacatiion/ScopedModels/ScopedModelShowChalet.dart';
 
 //روئيه الشاليه فى حاله انه غير مشترك فيه--------
 class PageCoupon extends StatefulWidget {
-  String chaletId;
+  final String chaletId;
 
-  String chaletName;
-  String totalPrice;
-  String startDate;
-  String endDate;
+  final String chaletName;
+  final String totalPrice;
+  final String startDate;
+  final String endDate;
 
   PageCoupon(
       {this.chaletId,
@@ -75,7 +60,7 @@ class _PageCouponState extends State<PageCoupon> {
 //      _scopedModelUpdateUser.showLoading();
 //      form.save();
 //      _scopedModelUpdateUser.updateAccountUser(name: nameText,
-//          phone: phoneText,
+//          phone: phoneText,5
 //          email: emailText,
 //          context: context
       //   );

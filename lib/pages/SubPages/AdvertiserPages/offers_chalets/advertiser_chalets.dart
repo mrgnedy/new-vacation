@@ -96,7 +96,10 @@ class _AdvertiserChaletsState extends State<AdvertiserChalets>
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
-                                                      image: NetworkImage(
+                                                      image: NetworkImage( snapshot
+                                                                  .data
+                                                                  .data[index].images
+                                                                  .isEmpty? '':
                                                           "http://vacatiion.net/public/images/" +
                                                               snapshot
                                                                   .data

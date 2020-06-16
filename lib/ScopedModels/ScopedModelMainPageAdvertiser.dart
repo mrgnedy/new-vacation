@@ -15,6 +15,7 @@ import 'package:vacatiion/model/Advertiser/UpdateAdvertiser.dart';
 import 'package:vacatiion/model/AdvertiserChalets/AdvertiserChaletsShow.dart';
 import 'package:vacatiion/model/AllChaletsAndOffersModel.dart';
 import 'package:vacatiion/model/UploadCategory.dart';
+import 'package:vacatiion/model/cities_model.dart';
 import 'package:vacatiion/pages/SubPages/OffersPage.dart';
 import 'package:vacatiion/utility/api_utilites.dart';
 import 'package:vacatiion/utility/utility_class.dart';
@@ -36,7 +37,14 @@ class ScopedModelMainPageAdvertiser extends Model {
   static bool checkExistChalet = false;
   static int numbersOfChalets = 3;
   static bool checkExistOffers = false;
-
+  String token;
+  CititesModel cititesModel;
+  ScopedModelMainPageAdvertiser() {
+    SharedPreferences.getInstance().then((pref) {
+      token = pref.getString('token');
+      getAllCities();
+    });
+  }
 //-------------- Show or not Hint Text ----------------//
   trueHintAddCategory() {
     showhintAddCategory = true;
@@ -433,8 +441,10 @@ class ScopedModelMainPageAdvertiser extends Model {
 
     print(detailsOfChalets);
 
-    FormData formData =  FormData.fromMap(detailsOfChalets);
-
+    FormData formData = FormData.fromMap(detailsOfChalets);
+    print(
+      _apiAddChalets + token,
+    );
     try {
       response = await dio.post(
         _apiAddChalets + token,
@@ -454,6 +464,17 @@ class ScopedModelMainPageAdvertiser extends Model {
       stopLoadingHomePage();
       print(e.response.data.toString());
     }
+  }
+
+  Future<CititesModel> getAllCities() async {
+    String url = ApiUtilities.baseApi + ApiUtilities.listCities + token;
+    final response = await http.get(url);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final derivedData = json.decode(response.body);
+      cititesModel = CititesModel.fromJson(derivedData);
+    }
+    notifyListeners();
+    return cititesModel;
   }
 
   void shawAlertDialogLogin({BuildContext context, String msg, String title}) {

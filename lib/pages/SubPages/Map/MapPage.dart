@@ -39,8 +39,8 @@ class _MapTypesState extends State<MapTypes> {
     });
 
     setState(() {
-      lat = widget.lat;
-      long = widget.long;
+      lat = widget.lat??0.00;
+      long = widget.long??0.00;
     });
     _goToCurrentLocation();
 

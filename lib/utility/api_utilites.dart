@@ -15,6 +15,7 @@ class ApiUtilities {
 
   //-----------------update User using Token-------------------//
   static String updateInformationUser = "/api/auth/updateUser?token=";
+  static String addOfficer = "/api/auth/shalehat/addreservationofficer?token=";
 
   //------------------- get All Chalets for Advertiser -------------------//
   static String advertiserChalets = "/api/auth/chalets?token=";
@@ -56,12 +57,14 @@ class ApiUtilities {
   static String searchByName = "/api/auth/shalehat/searchchalet?token=";
   static String searchByLocation = "/api/auth/search/location?token=";
   static String searchByCity = "/api/auth/shalehat/searchcity?token=";
+  static String listCities = "/api/auth/shalehat/cities?token=";
   static String searchByDate = "/api/auth/shalehat/searchdate?token=";
   //-----------------------Filter-----------------------//
   static String searchByFilter = "/api/auth/search/filter?token=";
 
   //------------------------------ coupon Reservations ---------------------------//
   static String couponReservations = "/api/auth/reservations/new?token=";
+  static String checkCoupon = "/api/auth/shalehat/checkcopon?token=";
 
   //-----------------------
   static String reservationsBill = "/api/auth/reservations/bill?token=";

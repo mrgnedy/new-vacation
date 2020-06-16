@@ -67,6 +67,8 @@ class Chalet {
   double lng;
   String kind;
   String department;
+  String numberGuests;
+  String deposit;
   int space;
   int nightNumber;
   String about;
@@ -88,6 +90,8 @@ class Chalet {
       // this.advEmail,
       this.name,
       // this.commentAndRate,
+      this.deposit,
+      this.numberGuests,
       this.startDate,
       this.endDate,
       this.startTime,
@@ -137,6 +141,8 @@ class Chalet {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     additions = json['additions'];
+    numberGuests = json['number_guests'].toString();
+    deposit = json['deposit'].toString();
     // commentAndRate = json['rates']; //added
 
     // List.generate(json['comment_rate'].length, (index) {

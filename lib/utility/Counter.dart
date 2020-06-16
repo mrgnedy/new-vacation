@@ -85,12 +85,12 @@ class Counter extends StatelessWidget {
           new SizedBox(
             width: buttonSize,
             height: buttonSize,
-            child: FloatingActionButton(
-              onPressed: _decrementCounter,
-              elevation: 2,
-              tooltip: 'تقليل',
-              child: Icon(Icons.remove),
-              backgroundColor: color,
+            child: InkWell(
+              onTap: _decrementCounter,
+              // elevation: 2,
+              // tooltip: 'تقليل',
+              child: Icon(Icons.remove_circle, color: color,),
+              // backgroundColor: color,
             ),
           ),
           new Container(
@@ -103,12 +103,12 @@ class Counter extends StatelessWidget {
           new SizedBox(
             width: buttonSize,
             height: buttonSize,
-            child: FloatingActionButton(
-              onPressed: _incrementCounter,
-              elevation: 2,
-              tooltip: 'زياده',
-              child: Icon(Icons.add),
-              backgroundColor: color,
+            child: InkWell(
+              onTap: _incrementCounter,
+              // elevation: 2,
+              // tooltip: 'زياده',
+              child: Icon(Icons.add_circle, color: color,),
+              // backgroundColor: color,
             ),
           ),
         ],

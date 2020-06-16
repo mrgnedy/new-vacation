@@ -92,8 +92,8 @@ class Data {
     endDate = json['endDate'];
     startTime = json['startTime'];
     endTime = json['endTime'];
-    lat = json['lat'];
-    lng = json['lng'];
+    lat = double.parse((json['lat'].toString()));
+    lng = double.parse((json['lng'].toString() ));
     kind = json['kind'];
     department = json['department'];
     space = json['space'];

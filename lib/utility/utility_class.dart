@@ -4,7 +4,8 @@ import 'dart:core';
 
 import 'dart:io';
 import 'dart:ui';
-import 'package:access_settings_menu/access_settings_menu.dart';
+// import 'package:access_settings_menu/access_settings_menu.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -395,7 +396,7 @@ static final String stringTest="هناك حقيقة مثبتة منذ زمن ط�
 
     try
     {
-      resultSettingsOpening =await AccessSettingsMenu.openSettings(settingsType: settingsName);
+      await AppSettings.openAppSettings();
 
         if(resultSettingsOpening)
         {

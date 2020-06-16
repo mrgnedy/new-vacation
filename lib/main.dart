@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:vacatiion/pages/SubPages/UserPages/chaletDetails/payment_details.dart';
+import 'package:vacatiion/pages/SubPages/UserPages/chaletDetails/reservation_details.dart';
 
 import 'ScopedModels/ScopedModeResultSearchPage.dart';
 import 'ScopedModels/ScopedModelMainPageAdvertiser.dart';
@@ -37,6 +39,11 @@ class MyApp extends StatelessWidget
   Widget build(BuildContext context)
   {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: TextTheme(
+          body1: TextStyle(fontFamily: 'DinNextMedium')
+        )
+      ),
       home: SplashPage(),
       debugShowCheckedModeBanner: false,
     );

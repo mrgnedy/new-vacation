@@ -104,7 +104,7 @@ class _SkipChaletsState extends State<SkipChalets> {
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
-                                                      image: NetworkImage("http://vacatiion.net/public/images/"+snapshot.data.data[index].images[0].image),
+                                                      image: NetworkImage(snapshot.data.data[index].images.isEmpty?"": "http://vacatiion.net/public/images/"+snapshot.data.data[index].images[0].image),
                                                       fit: BoxFit.fill),
                                                 ),
                                                 height: 165,

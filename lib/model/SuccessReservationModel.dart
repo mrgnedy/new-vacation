@@ -24,8 +24,8 @@ class SuccessReservationModel {
 
 class Data {
   ReservationData reservationData;
-  int price;
-  int discount;
+  String price;
+  String discount;
   String iban;
   String accountNumber;
 
@@ -40,8 +40,8 @@ class Data {
     reservationData = json['reservation data'] != null
         ? new ReservationData.fromJson(json['reservation data'])
         : null;
-    price = json['price'];
-    discount = json['discount'];
+    price = json['price'].toString();
+    discount = json['discount'].toString();
     iban = json['iban'];
     accountNumber = json['account_number'];
   }
@@ -80,7 +80,7 @@ class ReservationData {
         this.id});
 
   ReservationData.fromJson(Map<String, dynamic> json) {
-    price = json['price'];
+    price = json['price'].toString();
     chaletId = json['chalet_id'];
     startDate = json['startDate'];
     endDate = json['endDate'];

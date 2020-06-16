@@ -5,15 +5,13 @@ class UpdateAdvertiser {
 
   UpdateAdvertiser({this.data, this.status, this.error});
 
- factory UpdateAdvertiser.fromJson(Map<String, dynamic> json) {
-    return UpdateAdvertiser(
-        data : json['data'] != null ? new Data.fromJson(json['data']) : null,
-        status : json['status'],
-        error : json['error']);
+  UpdateAdvertiser.fromJson(Map<String, dynamic> json) {
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    status = json['status'];
+    error = json['error'];
   }
 
-  Map<String, dynamic> toJson()
-  {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
       data['data'] = this.data.toJson();
@@ -25,6 +23,35 @@ class UpdateAdvertiser {
 }
 
 class Data {
+  Profile profile;
+  List<Officers> officers;
+
+  Data({this.profile, this.officers});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    profile =
+        json['profile'] != null ? new Profile.fromJson(json['profile']) : null;
+    if (json['officers'] != null) {
+      officers = new List<Officers>();
+      json['officers'].forEach((v) {
+        officers.add(new Officers.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.profile != null) {
+      data['profile'] = this.profile.toJson();
+    }
+    if (this.officers != null) {
+      data['officers'] = this.officers.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Profile {
   int id;
   String name;
   String email;
@@ -34,42 +61,46 @@ class Data {
   String accountNumber;
   String eban;
   String image;
+  String os;
+  String deviceToken;
   int roleId;
-  Null emailVerifiedAt;
+  String emailVerifiedAt;
   String createdAt;
   String updatedAt;
 
-  Data(
+  Profile(
       {this.id,
-        this.name,
-        this.email,
-        this.phone,
-        this.bank,
-        this.accountName,
-        this.accountNumber,
-        this.eban,
-        this.image,
-        this.roleId,
-        this.emailVerifiedAt,
-        this.createdAt,
-        this.updatedAt});
+      this.name,
+      this.email,
+      this.phone,
+      this.bank,
+      this.accountName,
+      this.accountNumber,
+      this.eban,
+      this.image,
+      this.os,
+      this.deviceToken,
+      this.roleId,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt});
 
- factory Data.fromJson(Map<String, dynamic> json)
- {
-   return Data( id:json['id'],
-       name : json['name'],
-       email : json['email'],
-       phone : json['phone'],
-       bank : json['bank'],
-       accountName : json['account_name'],
-       accountNumber : json['account_number'],
-       eban : json['eban'],
-       image : json['image'],
-       roleId : json['role_id'],
-       emailVerifiedAt : json['email_verified_at'],
-       createdAt : json['created_at'],
-       updatedAt : json['updated_at']
-   );
+  Profile.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    phone = json['phone'];
+    bank = json['bank'];
+    accountName = json['account_name'];
+    accountNumber = json['account_number'];
+    eban = json['eban'];
+    image = json['image'];
+    os = json['os'];
+    deviceToken = json['device_token'];
+    roleId = json['role_id'];
+    emailVerifiedAt = json['email_verified_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +114,8 @@ class Data {
     data['account_number'] = this.accountNumber;
     data['eban'] = this.eban;
     data['image'] = this.image;
+    data['os'] = this.os;
+    data['device_token'] = this.deviceToken;
     data['role_id'] = this.roleId;
     data['email_verified_at'] = this.emailVerifiedAt;
     data['created_at'] = this.createdAt;
@@ -91,8 +124,42 @@ class Data {
   }
 }
 
-//-------------if Failed Update------------------------//
+class Officers {
+  int id;
+  String phone;
+  String name;
+  int userId;
+  String createdAt;
+  String updatedAt;
 
+  Officers(
+      {this.id,
+      this.phone,
+      this.name,
+      this.userId,
+      this.createdAt,
+      this.updatedAt});
+
+  Officers.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    phone = json['phone'];
+    name = json['name'];
+    userId = json['user_id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['phone'] = this.phone;
+    data['name'] = this.name;
+    data['user_id'] = this.userId;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
 class FailedUpdate {
   Null data;
   String status;
@@ -100,12 +167,12 @@ class FailedUpdate {
 
   FailedUpdate({this.data, this.status, this.error});
 
-factory  FailedUpdate.fromJson(Map<String, dynamic> json) {
-
-
-    return FailedUpdate(data : json['data'],
-        status : json['status'],
-        error : json['error'] != null ? new Error.fromJson(json['error']) : null);
+  factory FailedUpdate.fromJson(Map<String, dynamic> json) {
+    return FailedUpdate(
+        data: json['data'],
+        status: json['status'],
+        error:
+            json['error'] != null ? new Error.fromJson(json['error']) : null);
   }
 
   Map<String, dynamic> toJson() {

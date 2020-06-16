@@ -104,7 +104,8 @@ class _ChaletCardState extends State<ChaletCard> {
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        "http://vacatiion.net/public/images/" +
+                                        widget.snapshot.data.data[index]
+                                                .images.isEmpty?"": "http://vacatiion.net/public/images/" +
                                             widget.snapshot.data.data[index]
                                                 .images[0].image),
                                     fit: BoxFit.cover),

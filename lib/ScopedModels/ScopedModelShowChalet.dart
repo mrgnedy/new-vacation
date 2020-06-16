@@ -26,6 +26,8 @@ import 'package:vacatiion/pages/SubPages/OffersPage.dart';
 import 'package:vacatiion/pages/SubPages/UserPages/Payments/PageCoupon.dart';
 import 'package:vacatiion/pages/SubPages/UserPages/Payments/Payment_info.dart';
 import 'package:vacatiion/pages/SubPages/UserPages/Payments/ReservationPaymentPageBank.dart';
+import 'package:vacatiion/pages/SubPages/UserPages/Payments/ReservationPaymentPageVisa.dart';
+import 'package:vacatiion/pages/SubPages/UserPages/chaletDetails/reservation_details.dart';
 import 'package:vacatiion/utility/api_utilites.dart';
 import 'package:vacatiion/utility/page-route-transition.dart';
 import 'package:vacatiion/utility/utility_class.dart';
@@ -61,6 +63,13 @@ class ScopedModelShowChalet extends Model {
   stopLoadingPageCopun() {
     loadingPageCopun = false;
     notifyListeners();
+  }
+
+  String token;
+  ScopedModelShowChalet() {
+    SharedPreferences.getInstance().then((pref) {
+      token = pref.getString(Utility.TOKEN);
+    });
   }
 
   ///-------------------------------------------------------- StreamController Chalet -------------------------------------------//
@@ -107,10 +116,11 @@ class ScopedModelShowChalet extends Model {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
+    prefix0.print(chaletId);
     final response = await http.get(
         _apiGetShowChalet + "${chaletId}?token=" + token,
         headers: {"Accept": "application/json"});
-
+    prefix0.print(_apiGetShowChalet + "${chaletId}?token=" + token);
     var data = json.decode(response.body);
 
     ///========================================= Check the Status Response (SUCCESS)====================================//
@@ -174,9 +184,11 @@ class ScopedModelShowChalet extends Model {
     //     }),
     //     headers: {"Accept": "application/json"});
     final response = await request.send();
-    print('THIS IS MESSAGE ${(response.reasonPhrase)}');
-    // if(response.statusCode.toString().startsWith('2'));
-    Utility.shawAlertDialogSuccess(context: context, msg: 'تم تغيير حالة الشاليه الى ${status==1? 'محجوز': 'متاح'}');
+    print('THIS IS MESSAGE ${utf8.decode(await response.stream.first)}');
+    if(response.statusCode.toString().startsWith('2'))
+    Utility.shawAlertDialogSuccess(
+        context: context,
+        msg: 'تم تغيير حالة الشاليه الى ${status == 1 ? 'محجوز' : 'متاح'}');
     // Utility.showToast('تم تعديل حالة الشاليه', gravity: Toast.BOTTOM, chooseColor: 1);
     // else
     // Utility.showToast('تم تعديل حالة الشاليه', gravity: Toast.BOTTOM, chooseColor: 2);
@@ -185,7 +197,8 @@ class ScopedModelShowChalet extends Model {
   Future getDataForChaletSkipe({BuildContext context, int chaletId}) async {
     //showLoadingPage();
 
-    final response = await http.get('$_apiShowSkipeChalets${chaletId.toString().trim()}',
+    final response = await http.get(
+        '$_apiShowSkipeChalets${chaletId.toString().trim()}',
         headers: {"Accept": "application/json"});
 
     var data = json.decode(response.body);
@@ -224,7 +237,15 @@ class ScopedModelShowChalet extends Model {
   set setPrice(p) => price = p;
   num price;
   Future getCheckChalet(
-      {BuildContext context, String chaletId, String Start, String end}) async {
+      {BuildContext context,
+      discount,
+      deposit,
+      policy,
+      image,
+      address,
+      String chaletId,
+      String Start,
+      String end}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(Utility.TOKEN);
 
@@ -257,13 +278,30 @@ class ScopedModelShowChalet extends Model {
       ///========================================= Check the Status Response (SUCCESSs)====================================//
       if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
         var re = SuccessAvailable.fromJson(data);
-        openEditPageCoupon(
-            chaletName: re.data.chalet,
-            context: context,
-            end: re.data.endDate,
-            chaletId: chaletId,
-            price: price.toString(),
-            start: re.data.startDate);
+        print('$data');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ReservationPreview(
+                      chaletName: re.data.chalet,
+                      chaletID: chaletId,
+                      re: re,
+                      address: address,
+                      discount: discount.toString(),
+                      totalPrice: price.toString(),
+                      startDate: re.data.startDate,
+                      endDate: re.data.endDate,
+                      deposit: deposit.toString(),
+                      image: image,
+                      policy: policy,
+                    )));
+        // openEditPageCoupon(
+        //     chaletName: re.data.chalet,
+        //     context: context,
+        //     end: re.data.endDate,
+        //     chaletId: chaletId,
+        //     price: price.toString(),
+        //     start: re.data.startDate);
       }
 
       ///========================================= Check the Status Response (=====FAILED===) ====================================//
@@ -312,7 +350,7 @@ class ScopedModelShowChalet extends Model {
                           data['data']['infodata'][0]['discount'].toString(),
                       arboon: data['data']['infodata'][0]['deposit'] == null
                           ? '0'
-                          : data['data']['infodata'][0]['deposit'].totring(),
+                          : data['data']['infodata'][0]['deposit'].toString(),
                       total:
                           data['data']['infodata'][0]['total_price'].toString(),
                       s: reservBill,
@@ -356,7 +394,7 @@ class ScopedModelShowChalet extends Model {
       'cvv': cvv,
       'reservation_id': reservationId,
     }).then((response) {
-        stopLoadingPage();
+      stopLoadingPage();
       if (response.statusCode.toString().startsWith('2')) {
         sendEmail();
         Utility.shawAlertDialogSuccess(
@@ -375,9 +413,12 @@ class ScopedModelShowChalet extends Model {
   }
 
   Future addReservationChalet(
-      {BuildContext context,
+      {int type,
+      BuildContext context,
       String chaletId,
       String Start,
+      String deposit,
+      String totalPrice,
       String end,
       String coupon}) async {
     showLoadingPageCopun();
@@ -396,6 +437,7 @@ class ScopedModelShowChalet extends Model {
     request.fields['startDate'] = "${Start}";
     request.fields['endDate'] = "${end}";
     request.fields['total_price'] = '${price.toString()}';
+    prefix0.print(request.fields);
 
     //----------------------Send Request for Server-----------------------//
     var response = await request.send();
@@ -414,17 +456,28 @@ class ScopedModelShowChalet extends Model {
       if (data['status'] == Utility.VERIFICATION_CODE_SUCCESS) {
         stopLoadingPageCopun();
         var re = SuccessReservationModel.fromJson(data);
-        getPaymentInfo(context: context, id: chaletId, reservBill: re);
-        print('re re ${re.data.iban}');
-        return re;
+        // getPaymentInfo(context: context, id: chaletId, reservBill: re);
+        print('re re ${re.data.reservationData}');
+        print(re);
         // Navigator.push(context, MaterialPageRoute(builder:(context)=>PaymentInfo() ));
-        // openConfirmationPageBank(context: context, m: re);
+        if (type == 0)
+          openConfirmationPageBank(context: context, m: re, deposit: deposit, coupon: coupon);
+        else
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ReservationConfirmationPage(
+                chaletId: chaletId,
+                price: ((num.parse(deposit)/100)* (price - num.parse(coupon))).toStringAsFixed(3),
+              ),
+            ),
+          );
+        return re;
       }
 
       ///========================================= Check Refer ====================================//
       else if (data['status'] == Utility.VERIFICATION_CODE_FAILED) {
         stopLoadingPageCopun();
-        shawAlertFailed(context: context, msg: "", title: "");
+        shawAlertFailed(context: context, msg: "$data", title: "");
       } else {
         print(
             "=========================== VERIFICATION_CODE Not compatible with schema =======================");
@@ -714,12 +767,15 @@ class ScopedModelShowChalet extends Model {
   }
 
   void openConfirmationPageBank(
-      {BuildContext context, SuccessReservationModel m}) {
+      {BuildContext context, SuccessReservationModel m, String deposit, String coupon}) {
     //ReservationConfirmationPage
     Navigator.pushReplacement(
         context,
         SizeRoute(
             page: ReservationPaymentPageBank(
+          deposit: deposit,
+
+          coupon: coupon,
           m: m,
         )));
   }
@@ -754,5 +810,28 @@ class ScopedModelShowChalet extends Model {
     } catch (e) {
       print('Message not setn: ');
     }
+  }
+
+  Future checkCoupon(String coupon) async {
+    showLoadingPage();
+    notifyListeners();
+    print('GOT DA TOKEEN $token');
+    String url = ApiUtilities.baseApi + ApiUtilities.checkCoupon + token;
+    Map<String, dynamic> body = {'code': coupon};
+    final response = await http.post(url, body: body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final map = json.decode(response.body);
+      stopLoadingPage();
+      notifyListeners();
+      return map['data']['number'];
+    } else {
+      stopLoadingPage();
+      notifyListeners();
+      throw 'تعذر اضافة الكوبون';
+    }
+    stopLoadingPage();
+    stopLoadingPage();
+    notifyListeners();
+    return;
   }
 }

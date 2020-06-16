@@ -1,3 +1,5 @@
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:vacatiion/model/cities_model.dart';
 import 'dart:core';
 import 'dart:core';
 import 'dart:io';
@@ -21,6 +23,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:toast/toast.dart';
 import 'package:vacatiion/ScopedModels/ScopedModelMainPageAdvertiser.dart';
 import 'package:vacatiion/pages/SubPages/Map/MapPage.dart';
+import 'package:vacatiion/pages/SubPages/Map/map.dart';
 import 'package:vacatiion/utility/Counter.dart';
 import 'package:vacatiion/utility/RatingDialog.dart';
 import 'package:vacatiion/utility/colors.dart';
@@ -91,6 +94,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   TextEditingController additionController = TextEditingController();
   TextEditingController _textFieldControllerNumberRooms =
       TextEditingController();
+  TextEditingController _numberOfGuestsCtrler = TextEditingController();
   TextEditingController __textFieldControllerAreaOfbuilding =
       TextEditingController();
 
@@ -136,9 +140,9 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   //--------------------------------------list of Conditions-----------------------------//
   List<String> listConditions;
   List<String> conds;
-  bool _valuec1 = true;
+  // bool _valuec1 = true;
   bool _valuec2 = true;
-  bool _valuec3 = false;
+  bool _valuec3 = true;
   //---------------------------list of restTools--------------------------------//
   List<String> restTools;
   //--------------------------------------Add Value Description-----------------------------//
@@ -176,8 +180,9 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
   String startTime = ' ';
   String endTime = ' ';
-  String lat1;
-  String long1;
+  String lat1 ='0.0';
+  String long1= '0.0';
+  String cityName;
 
   String locationName = "السعوديه";
 
@@ -186,6 +191,11 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
   @override
   void initState() {
+    _scopedModelMainPageAdvertiser.cititesModel == null
+        ? _scopedModelMainPageAdvertiser
+            .getAllCities()
+            .then((cities) => cityList = cities.data)
+        : cityList = _scopedModelMainPageAdvertiser.cititesModel.data;
     print(restStuff.length);
     restVals = List.generate(restStuff.length, (_) => false);
     _selectionTypeDepartment = _itemsTypeBuildingDepartment.first;
@@ -420,6 +430,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     _textFieldControllerAbout.dispose();
     __textFieldControllerAreaOfbuilding.dispose();
     _textFieldControllerNumberRooms.dispose();
+    _numberOfGuestsCtrler.dispose();
     _textFieldAddNewConditions.dispose();
 
     super.dispose();
@@ -526,9 +537,9 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                         width: double.infinity,
                                         height: 150,
                                         child: AssetThumb(
-                                        asset: images[0],
-                                        width: double.infinity.round(),
-                                        height: 150,
+                                          asset: images[0],
+                                          width: 10000.round(),
+                                          height: 150,
                                         ),
                                       ),
 
@@ -1107,6 +1118,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
                           // getNameLocation();
                           getNameLocationForUser();
+                          // Geocoder.google(apiKey)
 //                            Navigator.push(
 //                              context,
 //                              MaterialPageRoute(builder: (context) => MyApp()),
@@ -1116,54 +1128,55 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 18),
                           child: Card(
                             elevation: 3,
-                            child: Container(
-                                decoration: new BoxDecoration(
-                                  border: Border.all(
-                                      width: 1.0, color: Color(0xffE1E1E1)),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          5.0) //    <--- border radius here
-                                      ),
-                                ),
-                                height: 60,
-                                child: Stack(
-                                  children: <Widget>[
-                                    //---------------icon Location------------//
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Image(
-                                          image:
-                                              AssetImage("assets/icons/20.png"),
-                                          height: 30,
-                                          width: 25,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
+                            child: citySuggestion(),
+                            // child: Container(
+                            //     decoration: new BoxDecoration(
+                            //       border: Border.all(
+                            //           width: 1.0, color: Color(0xffE1E1E1)),
+                            //       borderRadius: BorderRadius.all(
+                            //           Radius.circular(
+                            //               5.0) //    <--- border radius here
+                            //           ),
+                            //     ),
+                            //     height: 60,
+                            //     child: Stack(
+                            //       children: <Widget>[
+                            //         //---------------icon Location------------//
+                            //         Padding(
+                            //           padding: EdgeInsets.only(left: 15),
+                            //           child: Align(
+                            //             alignment: Alignment.centerLeft,
+                            //             child: Image(
+                            //               image:
+                            //                   AssetImage("assets/icons/20.png"),
+                            //               height: 30,
+                            //               width: 25,
+                            //               fit: BoxFit.fill,
+                            //             ),
+                            //           ),
+                            //         ),
 
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    //--------------Name of Location------------//
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(bottom: 5, right: 15),
-                                      child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            "${locationName}",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: 'DinNextRegular',
-                                              color: Color(0xff2E0063),
-                                              fontSize: 20,
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                )),
+                            //         SizedBox(
+                            //           width: 10,
+                            //         ),
+                            //         //--------------Name of Location------------//
+                            //         Padding(
+                            //           padding:
+                            //               EdgeInsets.only(bottom: 5, right: 15),
+                            //           child: Align(
+                            //               alignment: Alignment.centerRight,
+                            //               child: Text(
+                            //                 "${locationName}",
+                            //                 textAlign: TextAlign.center,
+                            //                 style: TextStyle(
+                            //                   fontFamily: 'DinNextRegular',
+                            //                   color: Color(0xff2E0063),
+                            //                   fontSize: 20,
+                            //                 ),
+                            //               )),
+                            //         ),
+                            //       ],
+                            //     )),
                           ),
                         ),
                       ),
@@ -1584,7 +1597,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                           children: <Widget>[
                             //o-------------------------- Out ----------------------//
                             Visibility(
-                            visible: endDate != null,
+                              visible: endDate != null,
                               // onTap: () {
                               //   // DatePicker.showDateTimePicker(context,
                               //   //     showTitleActions: true,
@@ -1694,7 +1707,10 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                             fontFamily: 'DinNextRegular',
                                           ),
                                         ),
-                                        Icon(Icons.date_range, color: ColorsV.defaultColor,)
+                                        Icon(
+                                          Icons.date_range,
+                                          color: ColorsV.defaultColor,
+                                        )
                                       ],
                                     ),
                                     SizedBox(
@@ -1725,7 +1741,8 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                               fontFamily: 'DinNextRegular',
                                             ),
                                           ),
-                                          Icon(Icons.access_time, color: ColorsV.defaultColor),
+                                          Icon(Icons.access_time,
+                                              color: ColorsV.defaultColor),
                                         ],
                                       ),
                                     ),
@@ -1737,40 +1754,40 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                             Visibility(
                               visible: StartDate != null,
                               // onTap: () {
-                                // DatePicker.showTimePicker(context);
-                                // DatePicker.showDateTimePicker(context,
-                                //     showTitleActions: true,
+                              // DatePicker.showTimePicker(context);
+                              // DatePicker.showDateTimePicker(context,
+                              //     showTitleActions: true,
 
-                                //     // minTime: DateTime(2019, 9, 5),
-                                //     // maxTime: DateTime(3019, 6, 7),
-                                //     onChanged: (date) {
-                                //   //2019-10-25
-                                //   // setState(() {
-                                //   //   StartDate = date.year.toString() +
-                                //   //       "-" +
-                                //   //       date.month.toString() +
-                                //   //       "-" +
-                                //   //       date.day.toString();
-                                //   //   print(
-                                //   //       "=====================TTT ${StartDate}");
-                                //   // });
-                                // }, onConfirm: (date) {
-                                //   setState(() {
-                                //     StartDate = date
-                                //         .toString()
-                                //         .split(' ')[0]
-                                //         .replaceAll('/', '-');
-                                //     startTime = date
-                                //         .toString()
-                                //         .split(' ')[1]
-                                //         .split('.')[0];
-                                //   });
+                              //     // minTime: DateTime(2019, 9, 5),
+                              //     // maxTime: DateTime(3019, 6, 7),
+                              //     onChanged: (date) {
+                              //   //2019-10-25
+                              //   // setState(() {
+                              //   //   StartDate = date.year.toString() +
+                              //   //       "-" +
+                              //   //       date.month.toString() +
+                              //   //       "-" +
+                              //   //       date.day.toString();
+                              //   //   print(
+                              //   //       "=====================TTT ${StartDate}");
+                              //   // });
+                              // }, onConfirm: (date) {
+                              //   setState(() {
+                              //     StartDate = date
+                              //         .toString()
+                              //         .split(' ')[0]
+                              //         .replaceAll('/', '-');
+                              //     startTime = date
+                              //         .toString()
+                              //         .split(' ')[1]
+                              //         .split('.')[0];
+                              //   });
 
-                                //   print(
-                                //       '====================confirm $startTime');
-                                // },
-                                //     currentTime: DateTime.now(),
-                                //     locale: LocaleType.ar);
+                              //   print(
+                              //       '====================confirm $startTime');
+                              // },
+                              //     currentTime: DateTime.now(),
+                              //     locale: LocaleType.ar);
                               // },
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 15),
@@ -1856,7 +1873,8 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                             fontFamily: 'DinNextRegular',
                                           ),
                                         ),
-                                        Icon(Icons.date_range, color: ColorsV.defaultColor),
+                                        Icon(Icons.date_range,
+                                            color: ColorsV.defaultColor),
                                       ],
                                     ),
                                     SizedBox(
@@ -1886,7 +1904,8 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                               fontFamily: 'DinNextRegular',
                                             ),
                                           ),
-                                          Icon(Icons.access_time, color: ColorsV.defaultColor),
+                                          Icon(Icons.access_time,
+                                              color: ColorsV.defaultColor),
                                         ],
                                       ),
                                     ),
@@ -2482,104 +2501,207 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                         child: Card(
                           elevation: 5,
                           child: Container(
-                              decoration: new BoxDecoration(
-                                border: Border.all(
-                                    width: 1.0, color: Color(0xffE1E1E1)),
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                        5.0) //                 <--- border radius here
-                                    ),
-                              ),
-                              height: 60,
-                              child: Stack(
-                                children: <Widget>[
-                                  //---------------Price------------//
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Row(
-                                      children: <Widget>[
-                                        //--------------Price Value--------//
-                                        Padding(
-                                          padding: EdgeInsets.only(bottom: 5),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                width: 60,
-                                                height: 50,
-                                                alignment: Alignment.center,
-                                                child: TextField(
-                                                  textAlign: TextAlign.center,
-                                                  controller:
-                                                      _textFieldControllerNumberRooms,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  //  textDirection: TextDirection.rtl,
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                  //--------------------------------===== decoration =====-----------------------------//
-                                                  decoration: InputDecoration(
-                                                    //Add th Hint text here.
-                                                    contentPadding:
-                                                        EdgeInsets.only(
-                                                            left: 8,
-                                                            right: 17,
-                                                            bottom: 9,
-                                                            top: 9),
-                                                    hintText: "4",
-                                                    hintStyle: TextStyle(
-                                                        color: Colors.grey),
-                                                    //-----------------Decoration no Active Click---------------//
-                                                    enabledBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide:
-                                                          const BorderSide(
-                                                              color: ColorsV
-                                                                  .defaultColor,
-                                                              width: 0.0),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5)),
-                                                    ),
-                                                    //----------------- Decoration Active Click ---------------//
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: ColorsV
-                                                              .defaultColor),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5)),
-                                                    ),
+                            decoration: new BoxDecoration(
+                              border: Border.all(
+                                  width: 1.0, color: Color(0xffE1E1E1)),
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                      5.0) //                 <--- border radius here
+                                  ),
+                            ),
+                            height: 60,
+                            child: Stack(
+                              children: <Widget>[
+                                //---------------Price------------//
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Row(
+                                    children: <Widget>[
+                                      //--------------Price Value--------//
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Container(
+                                              width: 60,
+                                              height: 50,
+                                              alignment: Alignment.center,
+                                              child: TextField(
+                                                textAlign: TextAlign.center,
+                                                controller:
+                                                    _textFieldControllerNumberRooms,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                //  textDirection: TextDirection.rtl,
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                //--------------------------------===== decoration =====-----------------------------//
+                                                decoration: InputDecoration(
+                                                  //Add th Hint text here.
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          left: 8,
+                                                          right: 17,
+                                                          bottom: 9,
+                                                          top: 9),
+                                                  hintText: "4",
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey),
+                                                  //-----------------Decoration no Active Click---------------//
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            color: ColorsV
+                                                                .defaultColor,
+                                                            width: 0.0),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(5)),
+                                                  ),
+                                                  //----------------- Decoration Active Click ---------------//
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: ColorsV
+                                                            .defaultColor),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(5)),
                                                   ),
                                                 ),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
                                   ),
+                                ),
 
-                                  SizedBox(
-                                    width: 7,
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                //--------------Text Price of Night------------//
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(bottom: 5, right: 15),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        "عدد دورات المياه",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'DinNextRegular',
+                                          color: Color(0xff2E0063),
+                                          fontSize: 20,
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: Card(
+                          elevation: 5,
+                          child: Container(
+                            decoration: new BoxDecoration(
+                              border: Border.all(
+                                  width: 1.0, color: Color(0xffE1E1E1)),
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                      5.0) //                 <--- border radius here
                                   ),
-                                  //--------------Text Price of Night------------//
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(bottom: 5, right: 15),
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          "عدد دورات المياه",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: 'DinNextRegular',
-                                            color: Color(0xff2E0063),
-                                            fontSize: 20,
-                                          ),
-                                        )),
+                            ),
+                            height: 60,
+                            child: Stack(
+                              children: <Widget>[
+                                //---------------Price------------//
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Row(
+                                    children: <Widget>[
+                                      //--------------Price Value--------//
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Container(
+                                              width: 60,
+                                              height: 50,
+                                              alignment: Alignment.center,
+                                              child: TextField(
+                                                textAlign: TextAlign.center,
+                                                controller:
+                                                    _numberOfGuestsCtrler,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                //  textDirection: TextDirection.rtl,
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                //--------------------------------===== decoration =====-----------------------------//
+                                                decoration: InputDecoration(
+                                                  //Add th Hint text here.
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          left: 8,
+                                                          right: 17,
+                                                          bottom: 9,
+                                                          top: 9),
+                                                  hintText: "4",
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey),
+                                                  //-----------------Decoration no Active Click---------------//
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            color: ColorsV
+                                                                .defaultColor,
+                                                            width: 0.0),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(5)),
+                                                  ),
+                                                  //----------------- Decoration Active Click ---------------//
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: ColorsV
+                                                            .defaultColor),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(5)),
+                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              )),
+                                ),
+
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                //--------------Text Price of Night------------//
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(bottom: 5, right: 15),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        "عدد الضيوف ",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'DinNextRegular',
+                                          color: Color(0xff2E0063),
+                                          fontSize: 20,
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
 
@@ -2641,202 +2763,173 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  //---------------Description------------//
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 8),
-                                                    // width: 100
-                                                    // ,
-                                                    child: Text(
-                                                      "دفع عربون مقداره",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontFamily:
-                                                              'DinNextMedium',
-                                                          fontSize: 17),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        width: 60,
-                                                        margin:
-                                                            EdgeInsets.all(8),
-                                                        height: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: TextField(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          inputFormatters: [
-                                                            LengthLimitingTextInputFormatter(
-                                                                2)
-                                                          ],
-                                                          controller: depoCtrl,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          style: TextStyle(),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            // contentPadding: EdgeInsets.only(bottom:5),
-
-                                                            border:
-                                                                OutlineInputBorder(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '%',
+                                              CheckboxListTile(
+                                                value: _valuec2,
+                                                activeColor: Colors.white,
+                                                checkColor:
+                                                    ColorsV.defaultColor,
+                                                // selected: true,
+                                                onChanged: (s) {
+                                                  {
+                                                    setState(() =>
+                                                        _valuec2 = !_valuec2);
+                                                  }
+                                                },
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    //---------------Description------------//
+                                                    Container(
+                                                      padding: EdgeInsets.only(
+                                                          right: 8),
+                                                      // width: 100
+                                                      // ,
+                                                      child: Text(
+                                                        "دفع عربون مقداره",
                                                         style: TextStyle(
                                                             color: Colors.white,
-                                                            fontSize: 24),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  //------------------True  or False----------------//
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _valuec2 = !_valuec2;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        //decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          child: _valuec2
-                                                              ? Icon(
-                                                                  Icons.check,
-                                                                  size: 30.0,
-                                                                  color: Colors
-                                                                      .green,
-                                                                )
-                                                              : Icon(
-                                                                  Icons.cancel,
-                                                                  size: 30.0,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                        ),
+                                                            fontFamily:
+                                                                'DinNextMedium',
+                                                            fontSize: 17),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          width: 60,
+                                                          margin:
+                                                              EdgeInsets.all(8),
+                                                          height: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: TextField(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            inputFormatters: [
+                                                              LengthLimitingTextInputFormatter(
+                                                                  2)
+                                                            ],
+                                                            controller:
+                                                                depoCtrl,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            style: TextStyle(),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              // contentPadding: EdgeInsets.only(bottom:5),
+
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '%',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 24),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    //------------------True  or False----------------//
+                                                  ],
+                                                ),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  //---------------Description------------//
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 8),
-                                                    // width: 100
-                                                    // ,
-                                                    child: Text(
-                                                      "دفع تامين مقداره يدفع عند الوصول\n و يستر��ع عند الخروج في حاله سلامة المكان",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontFamily:
-                                                              'DinNextMedium',
-                                                          fontSize: 10),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        width: 60,
-                                                        margin:
-                                                            EdgeInsets.all(8),
-                                                        height: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: TextField(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          inputFormatters: [
-                                                            LengthLimitingTextInputFormatter(
-                                                                2)
-                                                          ],
-                                                          controller:
-                                                              insuranceCtrl,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          style: TextStyle(),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            // contentPadding: EdgeInsets.only(bottom:5),
-
-                                                            border:
-                                                                OutlineInputBorder(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '%',
+                                              CheckboxListTile(
+                                                dense: true,
+                                                value: _valuec3,
+                                                activeColor: Colors.white,
+                                                checkColor:
+                                                    ColorsV.defaultColor,
+                                                onChanged: (s) {
+                                                  setState(() {
+                                                    _valuec3 = !_valuec3;
+                                                  });
+                                                },
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    //---------------Description------------//
+                                                    Container(
+                                                      padding: EdgeInsets.only(
+                                                          right: 8),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2.5,
+                                                      // ,
+                                                      child: Text(
+                                                        "دفع تامين مقداره يدفع عند الوصول\n و يسترجع عند الخروج في حاله سلامة المكان",
+                                                        maxLines: 3,
                                                         style: TextStyle(
                                                             color: Colors.white,
-                                                            fontSize: 24),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  //------------------True  or False----------------//
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _valuec3 = !_valuec3;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        //decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          child: _valuec2
-                                                              ? Icon(
-                                                                  Icons.check,
-                                                                  size: 30.0,
-                                                                  color: Colors
-                                                                      .green,
-                                                                )
-                                                              : Icon(
-                                                                  Icons.cancel,
-                                                                  size: 30.0,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                        ),
+                                                            fontFamily:
+                                                                'DinNextMedium',
+                                                            fontSize: 10),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          width: 60,
+                                                          margin:
+                                                              EdgeInsets.all(8),
+                                                          height: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: TextField(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            inputFormatters: [
+                                                              LengthLimitingTextInputFormatter(
+                                                                  2)
+                                                            ],
+                                                            controller:
+                                                                insuranceCtrl,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            style: TextStyle(),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              // contentPadding: EdgeInsets.only(bottom:5),
+
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '%',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 24),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    //------------------True  or False----------------//
+                                                  ],
+                                                ),
                                               )
                                             ]
                                               ..addAll(List.generate(
@@ -3058,6 +3151,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                               nightNUmber: _textFieldControllerPriceNight.text,
                               NumberBathRooms:
                                   _textFieldControllerNumberRooms.text,
+                              numberGuests: _numberOfGuestsCtrler.text,
                               space: __textFieldControllerAreaOfbuilding.text,
                               cancelNumber: choicePolicy);
                         },
@@ -3157,6 +3251,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       ),
     );
   }
+
   static Future<List<dynamic>> getImageListFromAssets(
       List<Asset> _images) async {
     List<Future<ByteData>> futures = [];
@@ -3174,6 +3269,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       return [imgList, imageNames];
     });
   }
+
   //----------------Get List of Images----------------------//
   Future<void> loadAssets() async {
     print(
@@ -3227,7 +3323,6 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       }
     });
   }
-  
 
   //-----------------------Location----------------------------------//
   getNameLocation() async {
@@ -3249,7 +3344,8 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     setState(() {
       lat1 = position.latitude.toString();
       long1 = position.longitude.toString();
-      locationName = first.featureName.toString();
+      // locationName = first.featureName.toString();
+      // cityName = locationName.
     });
   }
 
@@ -3268,54 +3364,52 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       print("--------------------Active-----------");
 
       checkPermission();
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(
-          "=========postion=======${position.latitude} : ${position.longitude}=====================");
+      // Position position = await Geolocator()
+      //     .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      // print(
+      //     "=========postion=======${position.latitude} : ${position.longitude}=====================");
 
-      lat = position.latitude.toString();
-      long = position.longitude.toString();
+      // lat = position.latitude.toString();
+      // long = position.longitude.toString();
 
-      if (lat == null || long == null) {
-        Utility.shawAlertDialogFailedLocation(
-            context: context,
-            title: "خدمات مطلوبه",
-            msg: "للحصول على الموقع الحالي يجب تفعيل الموقع الجغرافي");
-      } else {
-        print("-------------Lat${lat}");
+      // if (lat == null || long == null) {
+      //   Utility.shawAlertDialogFailedLocation(
+      //       context: context,
+      //       title: "خدمات مطلوبه",
+      //       msg: "للحصول على الموقع الحالي يجب تفعيل الموقع الجغرافي");
+      // } else {
+      //   print("-------------Lat${lat}");
 
-        final coordinates = new Coordinates(
-            double.parse(lat1 ?? lat), double.parse(long1 ?? long));
-        var addresses =
-            await Geocoder.local.findAddressesFromCoordinates(coordinates);
-        var first = addresses.first;
-        print(
-            "=========testM=======${first.featureName} : ${first.addressLine}=====================");
+      //   final coordinates = new Coordinates(
+      //       double.parse(lat1 ?? lat), double.parse(long1 ?? long));
+      //   var addresses =
+      //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      //   var first = addresses.first;
+      //   print(
+      //       "=========testM=======${first.featureName} : ${first.addressLine}=====================");
 
-        String fullName = first.featureName + "-" + first.addressLine;
+      //   String fullName = first.featureName + "-" + first.addressLine;
 
-        setState(() {
-          lat1 = lat;
-          long1 = long;
-          locationName = first.addressLine.toString();
-        });
-        print("=========${lat1}+${long1}-------lat1");
-        Navigator.push(
-          context,
-          SlideRightRoute(
-            page: MapTypes(
-                lat: double.parse(lat1),
-                long: double.parse(long1),
-                namelocation: fullName),
-          ),
-        ).then((s) {
-          setState(() {
-            lat1 = s[0].toString();
-            long1 = s[1].toString();
-            locationName = s[2];
-          });
-        });
-      }
+      //   setState(() {
+      //     lat1 = lat;
+      //     long1 = long;
+      //     locationName = first.addressLine.toString();
+      //   });
+      //   print("=========${lat1}+${long1}-------lat1");
+      Navigator.push<Position>(
+        context,
+        MaterialPageRoute(builder: (context) => MapScreen(() {})),
+      ).then((s) async {
+        locationName = (await Geocoder.local.findAddressesFromCoordinates(
+                Coordinates(s.latitude, s.longitude)))
+            .first
+            .addressLine;
+        lat1 = s.latitude.toString();
+        long1 = s.longitude.toString();
+        // cityName =
+        setState(() {});
+      });
+      // }
     } else {
       print("--------------------not Active-----------");
       Utility.shawAlertDialogFailedLocation(
@@ -3343,6 +3437,45 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       });
   }
 
+  int selectedCityID;
+  List<City> cityList = [];
+  TextEditingController _textEditingControllerCity = TextEditingController();
+  Widget citySuggestion() {
+    return TypeAheadFormField<City>(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: _textEditingControllerCity,
+        style: TextStyle(
+          color: ColorsV.defaultColor,
+          fontFamily: 'DinNextLight',
+          fontWeight: FontWeight.w600,
+          fontSize: 22,
+        ),
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(right:18, bottom: 20),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(width: 10)),
+            hintText: 'أكتب اسم المدينة'),
+      ),
+      onSuggestionSelected: (city) {
+        selectedCityID = city.id;
+        _textEditingControllerCity.text = city.city;
+      },
+      itemBuilder: (context, city) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          '${city.city}',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: ColorsV.defaultColor, fontSize: 18, fontFamily: 'DinNextLight'),
+        ),
+      ),
+      suggestionsCallback: (suggestedCity) => Future.sync(
+        () => cityList.where((c) => c.city.contains(suggestedCity)).toList(),
+      ),
+    );
+  }
+
   Future addDataForChalets({
     String chaletname,
     String kind,
@@ -3351,15 +3484,25 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     String nightNUmber,
     String about,
     String NumberBathRooms,
+    String numberGuests,
     String cancelNumber,
   }) async {
     print("================${cancelNumber}============");
+    print(selectedCityID);
     //-------------------------Chalets Name-------------------------//
     if (chaletname == null || chaletname.isEmpty) {
       Utility.shawAlertDialogFailed(
           context: context,
           title: "بيانات غير مكتمله",
           msg: "من فضلك ادخل اسم الشاليه");
+      return null;
+    }
+    if (_numberOfGuestsCtrler.text == null ||
+        _numberOfGuestsCtrler.text.isEmpty) {
+      Utility.shawAlertDialogFailed(
+          context: context,
+          title: "بيانات غير مكتمله",
+          msg: "من فضلك ادخل عدد الضيوف");
       return null;
     }
     if (space == null || space.isEmpty) {
@@ -3374,14 +3517,18 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
           (addition) => addition['add'] == true,
         )
         .toList();
+    print('THIS IS DEPOSIT ${depoCtrl.text}');
+    print('THIS IS NO.GUESTS ${_numberOfGuestsCtrler.text}');
     Map<String, dynamic> detailsOfChalets = {
       "name": "${chaletname}",
       "startDate": "${StartDate}",
       "endDate": "${endDate}",
-
+      "deposit": '${depoCtrl.text}', //---List String
+      "number_guests": '${_numberOfGuestsCtrler.text}',
+      "city": '$locationName',
+      "city_id": '$selectedCityID',
       "startTime": "$startTime",
       "endTime": "$endTime",
-
       "lat": "${lat1}",
       "lng": "${long1}",
       "kind": "${kind}",
@@ -3397,16 +3544,15 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       "images": [],
       "conditions": [],
       "additions": addedList ?? [{}],
-      "deposit": deposit ?? "" //---List String
     };
 
-    if (lat1 == null || long1 == null) {
-      Utility.shawAlertDialogFailed(
-          context: context,
-          title: "بيانات غير مكتمله",
-          msg: "اضغط على علامه الموقع لتحديد خطوط الطول و العرض");
-      return null;
-    }
+    // if (lat1 == null || long1 == null) {
+    //   Utility.shawAlertDialogFailed(
+    //       context: context,
+    //       title: "بيانات غير مكتمله",
+    //       msg: "اضغط على علامه الموقع لتحديد خطوط الطول و العرض");
+    //   return null;
+    // }
     //----------------------------start ,end-----------------------//
     if (StartDate == null) {
       Utility.shawAlertDialogFailed(
@@ -3429,7 +3575,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     if (nightNUmber.isEmpty || nightNUmber == null) {
       Utility.shawAlertDialogFailed(
           context: context,
-          title: "بيانا�� غير مكتمله",
+          title: "بيانات غير مكتمله",
           msg: "من فضلك ادخل سعر الليله");
       return null;
     }
@@ -3453,15 +3599,15 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
     //-----------------------Images---------------------//
     if (images.length >= 6) {
-    final List imgsData = (await getImageListFromAssets(images));
-    final List<List<int>> imgs = imgsData.first;
-    final List<String> imgsNames = imgsData.last;
-      for (int i=0; i<imgs.length; i++) {
+      final List imgsData = (await getImageListFromAssets(images));
+      final List<List<int>> imgs = imgsData.first;
+      final List<String> imgsNames = imgsData.last;
+      for (int i = 0; i < imgs.length; i++) {
         // var pathImage = await s.filePath;
 
         // var filename = await s.name;
 
-        var gg =  MultipartFile.fromBytes(imgs[i], filename: imgsNames[i]);
+        var gg = MultipartFile.fromBytes(imgs[i], filename: imgsNames[i]);
 
         detailsOfChalets["images"].add({"image": gg});
       }
@@ -3547,13 +3693,30 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     //   deposit = 30;
     // }
 
+    // if (_valuec2) {
+    //   deposit = int.parse(depoCtrl.text ?? '0');
+    //   detailsOfChalets['deposit'] = deposit;
+    //   print(deposit);
+    //   listConditions.insert(0, "دفع عربون مقداره  $deposit% من قيمه الحجز");
+    // }
+    // if (_valuec3) {
+    //   int insurance = int.parse(insuranceCtrl.text ?? '0');
+    //   //detailsOfChalets['insurance'] = deposit;
+    //   listConditions.insert(1,
+    //       "دفع تامين مقداره $insurance% عند الوصول و يستترجع بعد الخروج في حال سلامةالمكان");
+    // }
+    // if (_valuec3) {
+    //   listConditions.add("يوجد تأمين بمبلغ 500 ريال يدفع");
+    // }
+
+    print("${detailsOfChalets.toString()}");
+    // WaveProgress(180.0, Colors.blue, Colors.blueAccent,);
+    //pr.show();
     if (_valuec2) {
       deposit = int.parse(depoCtrl.text ?? '0');
       detailsOfChalets['deposit'] = deposit;
       print(deposit);
       listConditions.insert(0, "دفع عربون مقداره  $deposit% من قيمه الحجز");
-      listConditions.insert(1,
-          "دفع تامين مقداره $insuranceCtrl% عند الوصول و يستترجع بعد الخروج في حال سلامةالمكان");
     }
     if (_valuec3) {
       int insurance = int.parse(insuranceCtrl.text ?? '0');
@@ -3561,9 +3724,6 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       listConditions.insert(1,
           "دفع تامين مقداره $insurance% عند الوصول و يستترجع بعد الخروج في حال سلامةالمكان");
     }
-    // if (_valuec3) {
-    //   listConditions.add("يوجد تأمين بمبلغ 500 ريال يدفع");
-    // }
     if (listConditions.length > 0) {
       for (int i = 0; i < listConditions.length; i++) {
         detailsOfChalets["conditions"].add("${listConditions[i]}");
@@ -3575,10 +3735,6 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
           msg: "من فضلك اكمل الشروط");
       return null;
     }
-
-    print("${detailsOfChalets.toString()}");
-    // WaveProgress(180.0, Colors.blue, Colors.blueAccent,);
-    //pr.show();
     return _scopedModelMainPageAdvertiser
         .uploadCategory(context: context, detailsOfChalets: detailsOfChalets)
         .then((_) {

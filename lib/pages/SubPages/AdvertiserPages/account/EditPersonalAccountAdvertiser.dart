@@ -179,7 +179,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                   imagePicker.showDialog(context);
                                                 },
                                                 child: _image==null? CircularProfileAvatar(
-                                                  "http://vacatiion.net/public/images/"+snapshot.data.data.image, //sets image path, it should be a URL string. default value is empty string, if path is empty it will display only initials
+                                                  "http://vacatiion.net/public/images/"+snapshot.data.data.profile.image, //sets image path, it should be a URL string. default value is empty string, if path is empty it will display only initials
                                                   radius: 90, // sets radius, default 50.0
                                                   backgroundColor: Colors.transparent, // sets background color, default Colors.white
                                                   borderWidth: 7,  // sets border, default 0.0
@@ -227,7 +227,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     },
                                                     textInputAction: TextInputAction.next,
                                                    // controller: _textFieldControllerName,
-                                                   initialValue:snapshot.data.data.name??"" ,
+                                                   initialValue:snapshot.data.data.profile.name??"" ,
                                                     keyboardType: TextInputType.text,
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
@@ -278,7 +278,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     },
                                                     textAlign: TextAlign.center,
                                                     textInputAction: TextInputAction.next,
-                                                    initialValue: snapshot.data.data.email??"",
+                                                    initialValue: snapshot.data.data.profile.email??"",
                                                     keyboardType: TextInputType.emailAddress,
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
@@ -337,7 +337,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     keyboardType: TextInputType.phone,
                                                     textInputAction: TextInputAction.next,
                                                     textAlign: TextAlign.center,
-                                                    initialValue: snapshot.data.data.phone.toString()??"",
+                                                    initialValue: snapshot.data.data.profile.phone.toString()??"",
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
                                                     //--------------------------------=====decoration=====-----------------------------//
@@ -392,7 +392,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     keyboardType: TextInputType.text,
                                                     textInputAction: TextInputAction.next,
                                                     textAlign: TextAlign.center,
-                                                    initialValue: snapshot.data.data.bank??"",
+                                                    initialValue: snapshot.data.data.profile.bank??"",
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
 
@@ -449,7 +449,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     keyboardType: TextInputType.text,
                                                     textInputAction: TextInputAction.next,
                                                     textAlign: TextAlign.center,
-                                                    initialValue: snapshot.data.data.accountName??"",
+                                                    initialValue: snapshot.data.data.profile.accountName??"",
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
 
@@ -507,7 +507,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     keyboardType: TextInputType.text,
                                                     textInputAction: TextInputAction.next,
                                                     textAlign: TextAlign.center,
-                                                    initialValue: snapshot.data.data.accountNumber??"",
+                                                    initialValue: snapshot.data.data.profile.accountNumber??"",
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
 
@@ -566,7 +566,7 @@ class _EditPersonalAccountAdvertiserState extends State<EditPersonalAccountAdver
                                                     textAlign: TextAlign.center,
                                                     keyboardType: TextInputType.text,
                                                     textInputAction: TextInputAction.next,
-                                                    initialValue: snapshot.data.data.eban??"",
+                                                    initialValue: snapshot.data.data.profile.eban??"",
                                                     textDirection: TextDirection.rtl,
                                                     style: TextStyle(color: Color(0xff1F1B62)),
 

@@ -65,10 +65,10 @@ class PaymentInfo extends StatelessWidget {
                 child: GestureDetector(
                   onTap: ()async {
                     
-                        if (await confirmReservPolicy(
+                        if ((await confirmReservPolicy(
                             'طريقة الدفع',
                             "اختر طريقة الدفع التى تود ان تستكمل بها عملية الحجز",
-                            context))
+                            context) == true))
                           Navigator.push(
                               context,
                               MaterialPageRoute(

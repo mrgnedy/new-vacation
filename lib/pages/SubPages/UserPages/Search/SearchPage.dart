@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_it/get_it.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:vacatiion/ScopedModels/ScopedModeResultSearchPage.dart';
 import 'package:vacatiion/ScopedModels/ScopedModelDrawerPages.dart';
+import 'package:vacatiion/ScopedModels/ScopedModelMainPageUser.dart';
 import 'package:vacatiion/model/ModelDrawer.dart';
 import 'package:vacatiion/model/NotificationsModel.dart';
+import 'package:vacatiion/model/cities_model.dart';
 import 'package:vacatiion/utility/colors.dart';
 import 'package:vacatiion/utility/utility_class.dart';
 
@@ -31,8 +35,15 @@ class _SearchPageState extends State<SearchPage> {
     _textEditingControllerCity = TextEditingController();
     _textEditDate = TextEditingController();
     _modeResultSearchPage = ScopedModeResultSearchPage();
+    _userModel.cititesModel == null
+        ? _userModel.getAllCities().then(((cities) => cityList = cities.data))
+        : cityList = _userModel.cititesModel.data;
     super.initState();
   }
+
+  ScopedModelMainPageUser get _userModel => GetIt.I<ScopedModelMainPageUser>();
+
+  List<City> cityList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -132,8 +143,9 @@ class _SearchPageState extends State<SearchPage> {
                           msg: "من فضلك اكتب اسم الملكية المراد البحث عنها");
                     } else {
                       _modeResultSearchPage.getResultSearchByCity(
-                          context: context,
-                          cityName: _textEditingControllerCity.text.toString());
+                        context: context,
+                        cityName: selectedCityID.toString(),
+                      );
                     }
                   },
                   textColor: Colors.white,
@@ -145,24 +157,26 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: TextField(
-                        controller: _textEditingControllerCity,
-                        textAlign: TextAlign.right,
-                        decoration: InputDecoration(
-                          hintText: "اكتب اسم المدينه",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: ColorsV.defaultColor),
-                          enabledBorder: new OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: ColorsV.defaultColor)),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                        ),
-                      )),
+                  child: citySuggestion(),
+                  // child: Container(
+                  //   alignment: Alignment.center,
+                  //   child: TextField(
+                  //     controller: _textEditingControllerCity,
+                  //     textAlign: TextAlign.right,
+                  //     decoration: InputDecoration(
+                  //       hintText: "اكتب اسم المدينه",
+                  //       hintStyle: TextStyle(
+                  //           fontWeight: FontWeight.w300,
+                  //           color: ColorsV.defaultColor),
+                  //       enabledBorder: new OutlineInputBorder(
+                  //           borderSide:
+                  //               new BorderSide(color: ColorsV.defaultColor)),
+                  //       focusedBorder: OutlineInputBorder(
+                  //         borderSide: BorderSide(color: Colors.orange),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ),
 
                 ///================================== Search By Date =================================//
@@ -204,23 +218,19 @@ class _SearchPageState extends State<SearchPage> {
                           controller: _textEditDate,
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: ColorsV.defaultColor),
+                                borderSide:
+                                    BorderSide(color: ColorsV.defaultColor),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.orange
-                                )
-                              ),
+                                  borderSide: BorderSide(color: Colors.orange)),
                               hintText: 'اضف تاريخ'),
                         ),
                       ),
                       IconButton(
                         iconSize: 45,
                         onPressed: getDate,
-                        icon:
-                         Image.asset("assets/icons/19.png",
-                              height: 45, width: 45, fit: BoxFit.cover),
-
+                        icon: Image.asset("assets/icons/19.png",
+                            height: 45, width: 45, fit: BoxFit.cover),
                       ),
                     ],
                   ),
@@ -278,6 +288,34 @@ class _SearchPageState extends State<SearchPage> {
           ],
         );
       })),
+    );
+  }
+
+  int selectedCityID;
+  Widget citySuggestion() {
+    return TypeAheadFormField<City>(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: _textEditingControllerCity,
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(width: 10)
+            ),
+            hintText: 'أكتب اسم المدينة'),
+      ),
+      onSuggestionSelected: (city) {
+        selectedCityID = city.id;
+        _textEditingControllerCity.text = city.city;
+      },
+      itemBuilder: (context, city) => Text(
+        '${city.city}',
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black, fontFamily: 'DinNextLight'),
+      ),
+      suggestionsCallback: (suggestedCity) => Future.sync(
+        () => cityList.where((c) => c.city.contains(suggestedCity)).toList(),
+      ),
     );
   }
 
